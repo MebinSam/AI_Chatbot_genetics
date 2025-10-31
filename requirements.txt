@@ -1,0 +1,10 @@
+
+flask
+flask-cors
+python-dotenv
+google-generativeai
+google-adk
+requests
+beautifulsoup4
+aiohttp
+colorama

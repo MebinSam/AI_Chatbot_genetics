@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NuGenomics and Genetic Wellness AI Assistant</title>
+  <style>
+    :root {
+      --primary: #007bff;
+      --secondary: #6c63ff;
+      --bg: #f4f7fb;
+      --bot-bg: #e8f0ff;
+      --user-bg: #d1f5d3;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #f3f8ff, #eaf2ff);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .chat-wrapper {
+      width: 95%;
+      max-width: 700px;
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.3em;
+      letter-spacing: 0.5px;
+    }
+
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      max-width: 80%;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-message {
+      background: var(--user-bg);
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+
+    .bot-message {
+      background: var(--bot-bg);
+      align-self: flex-start;
+      border-top-left-radius: 0;
+    }
+
+    .source {
+      color: var(--primary);
+      font-size: 0.85em;
+      margin-top: 5px;
+      text-align: right;
+    }
+
+    .typing {
+      display: inline-block;
+      height: 15px;
+      width: 50px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--secondary),
+        var(--secondary) 10px,
+        transparent 10px,
+        transparent 20px
+      );
+      background-size: 200% 100%;
+      animation: typing 1s linear infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes typing {
+      from { background-position: 200% 0; }
+      to { background-position: -200% 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-area {
+      display: flex;
+      padding: 14px;
+      border-top: 1px solid #ddd;
+      background: #fff;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      font-size: 1em;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .input-area input:focus {
+      border-color: var(--primary);
+    }
+
+    .input-area button {
+      margin-left: 10px;
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+
+    .input-area button:hover {
+      background: var(--secondary);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #bbb;
+      border-radius: 10px;
+    }
+    footer {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #555;
+      text-align: center;
+      padding: 10px;
+      background: transparent;
+    }
+
+    footer span {
+      font-weight: 600;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <div class="chat-header">💬 NuGenomics And Genetic Wellness AI Assistant</div>
+
+    <div class="chat-box" id="chat-box">
+      <div class="bot-message message">
+        👋 Hello! I’m your <b>NuGenomics Coordinator Agent</b>.<br />
+        I can connect you with our <b>Customer Service Agent</b> for NuGenomics FAQs or our <b>Genetic Wellness Expert</b> for health-related queries.<br /><br />
+        How can I help you today?
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="Ask your question..." onkeypress="if(event.key==='Enter') sendMessage()" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+  <footer>
+    💡 Prepared by <span>Mebin Sam</span> | Vidya Academy of Science and Technology
+  </footer>
+
+<script>
+  async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    const chatBox = document.getElementById('chat-box');
+    chatBox.innerHTML += `<div class='message user'><b>You:</b> ${message}</div>`;
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+    const thinkingMessage = document.createElement("div");
+    thinkingMessage.classList.add("message", "bot");
+    thinkingMessage.innerHTML = `<b>🤖 Router:</b> <span class="thinking">Analyzing query...</span>`;
+    chatBox.appendChild(thinkingMessage);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+      const res = await fetch('/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      chatBox.removeChild(thinkingMessage);
+
+      // helps in determining the agent
+      let agentName = data.source || "Coordinator Agent";
+      let emoji = agentName.toLowerCase().includes("nugenomics")
+        ? "🧫"
+        : agentName.toLowerCase().includes("wellness")
+        ? "🧬"
+        : "🤖";
+
+      // for response
+      chatBox.innerHTML += `
+        <div class='message bot'>
+          <b>${emoji} ${agentName}:</b><br>${data.response.replace(/\n/g, "<br>")}
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+    } catch (err) {
+      chatBox.removeChild(thinkingMessage);
+      chatBox.innerHTML += `<div class='message bot'><b>Error:</b> ${err.message}</div>`;
+    }
+  }
+
+  document.getElementById("user-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+
+</body>
+</html>
