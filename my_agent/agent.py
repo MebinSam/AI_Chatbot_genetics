@@ -25,6 +25,7 @@ router_agent = LlmAgent(
 
         "If it's just a greeting (like 'hi', 'hello', or 'thanks'), answer directly as yourself (the Coordinator).\n"
         "Otherwise, do not respond on your own — always call one of the tools."
+        "if anything asks other than this reject"
     ),
     tools=[
         AgentTool(customerServiceAgent),
@@ -34,3 +35,4 @@ router_agent = LlmAgent(
 
 # To export
 root_agent = router_agent
+
